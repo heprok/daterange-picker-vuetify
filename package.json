@@ -17,6 +17,7 @@
     "dist/*",
     "src/**/*.vue"
   ],
+  "license": "MIT",
   "dependencies": {
     "vue": "^2.6.12",
     "vuetify": "^2.4.0"
@@ -41,7 +42,6 @@
     "vue": "^2.6.12",
     "vue-cli-plugin-vuetify": "~2.4.0",
     "vue-template-compiler": "^2.6.12",
-    "vuetify": "^2.0.0",
     "date-fns": "^2.4.1",
     "vuetify-loader": "^1.7.0"
   },
