@@ -7,8 +7,13 @@
       v-bind="menuProps"
     >
       <template v-slot:activator="{ on }">
-        <v-text-field
+        <div
           v-on="on"
+          class="d-flex pa-2"
+          outline
+          tile
+          >
+        <v-text-field
           class="v-date-range__input-field"
           :value="inputValue"
           readonly
@@ -16,6 +21,7 @@
           :placeholder="placeholder"
           v-bind="inputProps"
         ></v-text-field>
+        </div>
       </template>
       <v-card class="v-date-range__menu-content">
         <v-card-text>
@@ -23,7 +29,7 @@
             :data-days="highlightDates.length"
             :class="{
               'v-date-range__pickers': true,
-              'v-date-range--highlighted': highlightDates.length
+              'v-date-range--highlighted': highlightDates.length,
             }"
           >
             <v-card-title v-if="$slots.title">
@@ -77,7 +83,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="reset">{{ actionProps.resetButton }}</v-btn>
-          <v-btn text @click="menu = false">{{
+          <v-btn color="error" text @click="menu = false">{{
             actionProps.cancelButton
           }}</v-btn>
           <v-btn
@@ -93,52 +99,52 @@
   </div>
 </template>
 <script>
-import { format, parse, differenceInCalendarDays, addDays } from 'date-fns';
-const isoFormat = 'yyyy-MM-dd';
+import { format, parse, differenceInCalendarDays, addDays } from "date-fns";
+const isoFormat = "yyyy-MM-dd";
 const defaultDate = format(new Date(), isoFormat);
 
 export default {
-  name: 'DaterangePickerVuetify',
+  name: "DaterangePickerVuetify",
   props: {
     // Take start and end as the input. Passable via v-model.
     value: {
       type: Object,
       default: () => {
         return { start: defaultDate, end: defaultDate };
-      }
+      },
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     presets: {
       type: Array,
       default: () => {
         return [];
-      }
+      },
     },
     noPresets: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // Denotes the Placeholder string for start date.
     startLabel: {
       type: String,
-      default: 'Start Date'
+      default: "Начало",
     },
     // Denotes the Placeholder string for start date.
     endLabel: {
       type: String,
-      default: 'End Date'
+      default: "Конец",
     },
     // The string that gets placed between `startLabel` and `endLabel`
     separatorLabel: {
       type: String,
-      default: 'To'
+      default: "До",
     },
     presetLabel: {
       type: String,
-      default: 'Presets'
+      default: "Шаблоны",
     },
     /**
      * Following values are all passable to vuetify's own datepicker
@@ -147,70 +153,70 @@ export default {
     // Min selectable date.
     min: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     // Max selectable date
     max: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     // Locale
     locale: {
       type: String,
-      default: 'en-us'
+      default: "ru-ru",
     },
     firstDayOfWeek: {
       type: [String, Number],
-      default: 0
+      default: 1,
     },
     noTitle: {
       type: Boolean,
-      default: false
+      default: false,
     },
     displayFormat: {
-      type: String
+      type: String,
     },
     highlightColor: {
       type: String,
-      default: 'blue lighten-5'
+      default: "blue lighten-5",
     },
     showReset: {
       type: Boolean,
-      default: true
+      default: true,
     },
     /**
      * Icons
      */
     nextIcon: {
       type: String,
-      default: '$vuetify.icons.next'
+      default: "$vuetify.icons.next",
     },
     prevIcon: {
       type: String,
-      default: '$vuetify.icons.prev'
+      default: "$vuetify.icons.prev",
     },
     inputProps: {
       type: Object,
       default: () => {
         return {};
-      }
+      },
     },
     menuProps: {
       type: Object,
       default: () => {
         return {};
-      }
+      },
     },
     actionProps: {
       type: Object,
       default: () => {
         return {
-          applyButton: 'Apply',
-          cancelButton: 'Cancel',
-          resetButton: 'Reset'
+          applyButton: "Принять",
+          cancelButton: "Отмена",
+          resetButton: "Сбросить",
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -218,13 +224,13 @@ export default {
       pickerStart: this.value.start,
       pickerEnd: this.value.end,
       highlightDates: [],
-      highlightClasses: {}
+      highlightClasses: {},
     };
   },
   computed: {
     inputValue() {
       if (this.isValueEmpty) {
-        return '';
+        return "";
       }
       const start = this.displayFormat
         ? this.formatDate(this.value.start, this.displayFormat)
@@ -252,11 +258,11 @@ export default {
     },
     isPresetActive() {
       return this.presets.map(
-        preset =>
+        (preset) =>
           preset.range[0] === this.pickerStart &&
           preset.range[1] === this.pickerEnd
       );
-    }
+    },
   },
   methods: {
     /**
@@ -280,10 +286,10 @@ export default {
       this.pickerStart = this.value.start;
       this.pickerEnd = this.value.end;
       this.highlight();
-      this.$emit('menu-closed');
+      this.$emit("menu-closed");
     },
     formatDate(date, fmt) {
-      return format(parse(date, 'yyyy-MM-dd', new Date()), fmt);
+      return format(parse(date, "yyyy-MM-dd", new Date()), fmt);
     },
     highlight() {
       if (!this.bothSelected) {
@@ -291,20 +297,20 @@ export default {
       }
       const dates = [];
       const classes = {};
-      const start = parse(this.pickerStart, 'yyyy-MM-dd', new Date());
-      const end = parse(this.pickerEnd, 'yyyy-MM-dd', new Date());
+      const start = parse(this.pickerStart, "yyyy-MM-dd", new Date());
+      const end = parse(this.pickerEnd, "yyyy-MM-dd", new Date());
       const diff = Math.abs(differenceInCalendarDays(start, end));
 
       // Loop though all the days in range.
       for (let i = 0; i <= diff; i++) {
-        const date = format(addDays(start, i), 'yyyy-MM-dd');
+        const date = format(addDays(start, i), "yyyy-MM-dd");
         dates.push(date);
         const classesArr = [];
         classesArr.push(`v-date-range__in-range`);
         classesArr.push(this.highlightColor);
         i === 0 && classesArr.push(`v-date-range__range-start`);
         i === diff && classesArr.push(`v-date-range__range-end`);
-        classes[date] = classesArr.join(' ');
+        classes[date] = classesArr.join(" ");
       }
       this.highlightDates = dates;
       this.highlightClasses = classes;
@@ -315,18 +321,18 @@ export default {
     },
     reset() {
       // Reset Picker Values
-      this.pickerStart = '';
-      this.pickerEnd = '';
+      this.pickerStart = "";
+      this.pickerEnd = "";
       this.highlightDates = [];
       this.highlightClasses = {};
       this.emitRange();
     },
     emitRange() {
-      this.$emit('input', {
+      this.$emit("input", {
         start: this.pickerStart,
-        end: this.pickerEnd
+        end: this.pickerEnd,
       });
-    }
+    },
   },
   watch: {
     // Watching to see if the menu is closed.
@@ -337,9 +343,9 @@ export default {
         this.highlight();
       }
     },
-    pickerStart: 'highlight',
-    pickerEnd: 'highlight'
-  }
+    pickerStart: "highlight",
+    pickerEnd: "highlight",
+  },
 };
 </script>
 <style lang="scss">
@@ -367,7 +373,10 @@ export default {
   top: 0;
   z-index: -1;
 }
-
+.v-btn .v-btn--text .v-btn--rounded .theme--dark {
+  background-color: black;
+  color: red;
+}
 /* =============================================
 =            Date buttons            =
 ============================================= */
@@ -390,7 +399,7 @@ export default {
       }
 
       &.v-btn--active::before {
-        background-color: transparent !important;
+        // background-color: transparent !important;
       }
     }
   }
